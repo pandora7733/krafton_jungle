@@ -208,6 +208,7 @@
           data: {},
           success: function (response) {
             let articles = response["articles"];
+            articles.sort((a,b) => b.likeCount - a.likeCount);
             console.log(articles);
             for (let i = 0; i < articles.length; i++) {
               makeCard(
