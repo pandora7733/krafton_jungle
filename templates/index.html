@@ -71,26 +71,24 @@
           <h1 class="display-4">나홀로메모장 <span class="bg-secondary text-white">ver2.0</span></h1>
           <div class="form-post">
             <div class="form-group">
-              <label for="post-title"></label>
-              <input id="post-title" class="form-control" placeholder="제목을 입력하세요" />
+              <label for="memo-title"></label>
+              <input id="memo-title" class="form-control" placeholder="제목을 입력하세요" />
             </div>
             <div class="form-group pb-3">
-              <label for="post-content"></label>
+              <label for="memo-content"></label>
               <textarea
-                id="post-content"
+                id="memo-content"
                 class="form-control"
                 rows="2"
                 placeholder="내용을 입력하세요"
               ></textarea>
             </div>
-            <button type="button" class="btn btn-primary" onclick="postArticle()">
-              저장하기
-            </button>
+            <button type="submit" class="btn btn-primary" onclick="postArticle()">저장하기</button>
           </div>
         </div>
       </div>
 
-      <div id="cards-box" class="row row-cols-1 row-cols-md-3 g-4">
+      <div id="card-list" class="row row-cols-1 row-cols-md-3 g-4">
         
       </div>
     </div>
@@ -102,7 +100,7 @@
 
     <script>
       $(document).ready(function () {
-        $("#cards-box").html("");
+        $("#card-list").html("");
         showArticles();
       });
 
@@ -114,7 +112,7 @@
         //제목을 input으로 변경
         card.querySelector(".card-title").outerHTML = `
           <input
-            class="form-control card-title mb-2"
+            class="form-control new-title mb-2"
             value="${oldTitle}"
           >
         `;
@@ -123,29 +121,29 @@
         // p 태그를 textarea로 변경
         card.querySelector(".card-text").outerHTML = `
           <textarea
-            class="form-control card-text"
+            class="form-control new-text"
             rows="2"
           >${content}</textarea>
         `;
 
         // 수정 버튼 숨기기
-        card.querySelector(".edit-btn").style.display = "none";
+        card.querySelector(".edit-button").style.display = "none";
         // 삭제 버튼 숨기기
-        card.querySelector(".delete-btn").style.display = "none";
+        card.querySelector(".delete-button").style.display = "none";
         // 좋아요 버튼 숨기기
-        card.querySelector(".like-btn").style.display = "none";
+        card.querySelector(".link-like").style.display = "none";
         // 저장 버튼 보이기
-        card.querySelector(".save-btn").style.display = "block";
+        card.querySelector(".save-button").style.display = "block";
         // 저장 버튼 클릭 시 저장 함수 호출
-        card.querySelector(".save-btn").onclick = function () {
+        card.querySelector(".save-button").onclick = function () {
           updateArticle(title);
         };
       }
 
       function updateArticle(title) {
         let card = event.target.closest(".card-body");
-        let newTitle = card.querySelector(".card-title").value;
-        let content = card.querySelector(".card-text").value;
+        let newTitle = card.querySelector(".new-title").value;
+        let content = card.querySelector(".new-text").value;
         $.ajax({
           type: "POST",
           url: "/update",
@@ -163,6 +161,7 @@
           url: "/delete",
           data: { title_give: title },
           success: function (response) {
+            alert("삭제 성공!");
             window.location.reload();
           }
         });
@@ -180,8 +179,8 @@
       }
 
       function postArticle() {
-        let title = $("#post-title").val();
-        let content = $("#post-content").val();
+        let title = $("#memo-title").val();
+        let content = $("#memo-content").val();
 
         // 2. memo에 POST 방식으로 메모 생성 요청하기
         $.ajax({
@@ -227,15 +226,15 @@
                             <div class="card-body">
                               <h5 class="card-title">${title}</h5>
                               <p class="card-text">${content}</p>
-                              <p id="like-count">${likeCount}</p>
-                              <button type="button" class="btn btn-info text-white edit-btn" onclick="startEdit('${title}')">수정</button>
-                              <button type="button" class="btn btn-success text-white save-btn" style="display:none" onclick="updateArticle('${title}')">저장</button>
-                              <button type="button" class="btn btn-danger text-white delete-btn" onclick="deleteArticle('${title}')">삭제</button>
-                              <button type="button" class="btn btn-outline-primary like-btn" onclick="likeArticle('${title}')"><span style="position: relative; bottom: 6px;">좋아요!</span><span class="material-symbols-outlined">thumb_up</span></button>
+                              <p class="card-likes">${likeCount}</p>
+                              <button type="button" class="btn btn-info text-white edit-button" onclick="startEdit('${title}')">수정</button>
+                              <button type="button" class="btn btn-success text-white save-button" style="display:none" onclick="updateArticle('${title}')">저장</button>
+                              <button type="button" class="btn btn-danger text-white delete-button" onclick="deleteArticle('${title}')">삭제</button>
+                              <button type="button" class="btn btn-outline-primary link-like" onclick="likeArticle('${title}')"><span style="position: relative; bottom: 6px;">좋아요!</span><span class="material-symbols-outlined">thumb_up</span></button>
                             </div>
                           </div>
                         </div>`;
-        $("#cards-box").append(tempHtml);
+        $("#card-list").append(tempHtml);
       }
     </script>
   </body>
