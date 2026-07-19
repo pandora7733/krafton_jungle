@@ -24,21 +24,21 @@ def post_article():
     article = { 'title': title_receive, 'content': content_receive, 'likeCount': likeCount }
 
     # 3. mongoDB에 데이터를 넣기
-    db.articles.insert_one(article)
+    db.memos.insert_one(article)
 
     return jsonify({'result': 'success'})
 
 @app.route('/contents', methods=['GET'])
 def read_articles():
     # 1. mongoDB에서 _id 값을 제외한 모든 데이터 조회해오기 (Read)
-    result = list(db.articles.find({}, {'_id': 0}))
+    result = list(db.memos.find({}, {'_id': 0}))
     # 2. articles라는 키 값으로 article 정보 보내주기
     return jsonify({'result': 'success', 'articles': result})
 
 @app.route('/delete', methods=['POST'])
 def delete_article():
     title_receive = request.form['title_give']
-    db.articles.delete_one({'title': title_receive})
+    db.memos.delete_one({'title': title_receive})
     return jsonify({'result': 'success'})
 
 @app.route('/update', methods=['POST'])
@@ -46,13 +46,13 @@ def update_article():
     title_receive = request.form['title_give']
     new_title_receive = request.form['new_title_give']
     content_receive = request.form['content_give']
-    db.articles.update_one({'title': title_receive}, {'$set': { 'title': new_title_receive, 'content': content_receive}})
+    db.memos.update_one({'title': title_receive}, {'$set': { 'title': new_title_receive, 'content': content_receive}})
     return jsonify({'result': 'success'})
 
 @app.route('/like', methods=['POST'])
 def like_article():
     title_receive = request.form['title_give']
-    db.articles.update_one({'title': title_receive}, {'$inc': {'likeCount': 1}})
+    db.memos.update_one({'title': title_receive}, {'$inc': {'likeCount': 1}})
     return jsonify({'result': 'success'})
 
 if __name__ == '__main__':
