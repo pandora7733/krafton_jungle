@@ -28,7 +28,6 @@ def post_article():
 
     return jsonify({'result': 'success'})
 
-
 @app.route('/contents', methods=['GET'])
 def read_articles():
     # 1. mongoDB에서 _id 값을 제외한 모든 데이터 조회해오기 (Read)
@@ -36,19 +35,18 @@ def read_articles():
     # 2. articles라는 키 값으로 article 정보 보내주기
     return jsonify({'result': 'success', 'articles': result})
 
-
 @app.route('/delete', methods=['POST'])
 def delete_article():
     title_receive = request.form['title_give']
     db.articles.delete_one({'title': title_receive})
     return jsonify({'result': 'success'})
 
-
 @app.route('/update', methods=['POST'])
 def update_article():
     title_receive = request.form['title_give']
+    new_title_receive = request.form['new_title_give']
     content_receive = request.form['content_give']
-    db.articles.update_one({'title': title_receive}, {'$set': {'content': content_receive}})
+    db.articles.update_one({'title': title_receive}, {'$set': { 'title': new_title_receive, 'content': content_receive}})
     return jsonify({'result': 'success'})
 
 @app.route('/like', methods=['POST'])

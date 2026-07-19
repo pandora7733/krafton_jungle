@@ -146,11 +146,12 @@
 
       function updateArticle(title) {
         let card = event.target.closest(".card-body");
+        let newTitle = card.querySelector(".card-title").value;
         let content = card.querySelector(".card-text").value;
         $.ajax({
           type: "POST",
           url: "/update",
-          data: { title_give: title, content_give: content },
+          data: { title_give: title, new_title_give: newTitle, content_give: content },
           success: function (response) {
             alert("수정 성공!");
             window.location.reload();
