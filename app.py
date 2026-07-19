@@ -51,6 +51,11 @@ def update_article():
     db.articles.update_one({'title': title_receive}, {'$set': {'content': content_receive}})
     return jsonify({'result': 'success'})
 
+@app.route('/like', methods=['POST'])
+def like_article():
+    title_receive = request.form['title_give']
+    db.articles.update_one({'title': title_receive}, {'$inc': {'likeCount': 1}})
+    return jsonify({'result': 'success'})
 
 if __name__ == '__main__':
     app.run('0.0.0.0', port=5000, debug=True)

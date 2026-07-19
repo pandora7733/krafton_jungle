@@ -91,18 +91,7 @@
       </div>
 
       <div id="cards-box" class="row row-cols-1 row-cols-md-3 g-4">
-        <div class="col">
-          <div class="card">
-            <div class="card-body">
-              <h5 class="card-title">여기에 제목이 들어갑니다</h5>
-              <p class="card-text">내용</p>
-              <p id="like-count">0</p>
-              <button type="button" class="btn btn-info text-white" onclick="updateArticle('${title}')">수정</button>
-              <button type="button" class="btn btn-danger text-white" onclick="deleteArticle('${title}')">삭제</button>
-              <button type="button" class="btn btn-outline-primary" onclick="likeArticle('${title}')"><span style="position: relative; bottom: 6px;">좋아요</span><span class="material-symbols-outlined">thumb_up</span></button>
-            </div>
-          </div>
-        </div>
+        
       </div>
     </div>
 
@@ -117,8 +106,7 @@
         showArticles();
       });
 
-      function updateArticle(title, content) {
-        let title = $("#post-title").val();
+      function updateArticle(title) {
         let content = $("#post-content").val();
         $.ajax({
           type: "POST",
@@ -133,6 +121,28 @@
             } else {
               alert("서버 오류!");
             }
+          }
+        });
+      }
+
+      function deleteArticle(title) {
+        $.ajax({
+          type: "POST",
+          url: "/delete",
+          data: { title_give: title },
+          success: function (response) {
+            window.location.reload();
+          }
+        });
+      }
+
+      function likeArticle(title) {
+        $.ajax({
+          type: "POST",
+          url: "/like",
+          data: { title_give: title },
+          success: function (response) {
+            window.location.reload();
           }
         });
       }
@@ -185,7 +195,7 @@
                               <h5 class="card-title">${title}</h5>
                               <p class="card-text">${content}</p>
                               <p id="like-count">${likeCount}</p>
-                              <button type="button" class="btn btn-info text-white" onclick="updateArticle('${title, content}')">수정</button>
+                              <button type="button" class="btn btn-info text-white" onclick="updateArticle('${title}')">수정</button>
                               <button type="button" class="btn btn-danger text-white" onclick="deleteArticle('${title}')">삭제</button>
                               <button type="button" class="btn btn-outline-primary" onclick="likeArticle('${title}')"><span style="position: relative; bottom: 6px;">좋아요</span><span class="material-symbols-outlined">thumb_up</span></button>
                             </div>
