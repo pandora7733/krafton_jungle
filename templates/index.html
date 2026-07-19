@@ -110,6 +110,15 @@
         // 클릭한 버튼 기준으로 카드 찾기
         let card = event.target.closest(".card-body");
         // 기존 내용 가져오기
+        let oldTitle = card.querySelector(".card-title").innerText;
+        //제목을 input으로 변경
+        card.querySelector(".card-title").outerHTML = `
+          <input
+            class="form-control card-title mb-2"
+            value="${oldTitle}"
+          >
+        `;
+        // 기존 내용 가지고 오기
         let content = card.querySelector(".card-text").innerText;
         // p 태그를 textarea로 변경
         card.querySelector(".card-text").outerHTML = `
